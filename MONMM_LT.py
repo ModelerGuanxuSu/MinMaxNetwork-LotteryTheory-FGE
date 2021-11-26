@@ -1,4 +1,3 @@
-
 import tensorflow as tf
 import numpy as np
 import copy
@@ -45,6 +44,11 @@ class MNN(object):
         self.x_max = None
         self.x_set_len = None
         self.importance = None
+        self.w0 = None
+        self.w_min = None
+        self.b0 = None
+        self.b_min = None
+        
     def plotLoss(self,num=None):
         if self.Loss is None:
             raise ValueError('Error: plotLoss before fit')
@@ -237,63 +241,46 @@ Parameters
 ----------
 max_iter : int, default: 100
     Maximum number of iterations of the optimization algorithm.
-
 batch_size : int, default: 1024
     Number of rows of each batch of the batch training.
     If equal to number of rows of training data, then the algorithm
     would be equivalent to full scale training.
-
 units_each_group : int, default: None
     Number of nodes in the first hidden layers after sign layer.
     if set to be None, it will take value of
     int(np.log(#feature)*4.5)
-
 number_of_groups : int, default: None
     Number of nodes in the hidden layers between the second hidden
     layer and output layer. If set to be None, it will take value of
     int(np.log10(#training set)**1.6)
-
 trace : boolean, default: True
     If set to be True, loss will be printed during training
-
 learning_rate : float, default: 0.01
-
 dropout_ratio : float, default: 0.1
-
 Q0 : float, default: 0.98
     When robust is 'quantile':
     if set to be a non-negative value less than 1, the loss function for
     the smaples of lable equals to 0 would be modified to exclude the
     elements greater than quantile Q0 before calculate the mean.
-
 Q1 : float, default: 1.0
     When robust is 'quantile':
     if set to be a non-negative value less than 1, the loss function for
     the smaples of lable equals to 1 would be modified to exclude the
     elements greater than quantile Q1 before calculate the mean.
-
 Attributes
 ----------
 weights: list of length 5
     weights in the encoding network
-
 biases: list of length 5
     biases in the encoding network
-
 Methods
 -------
 fit: optimize the encoding network
-
 predict: predict the labels
-
 predict_proba: predict the probabilities
-
 plotLoss : trace plot of loss
-
 save_parameter: save the parameters into a pickle file
-
 load_parameter: load the parameters from a pickle file
-
     '''
     def __init__(
             self,max_iter=1500, batch_size=None,
@@ -391,7 +378,6 @@ load_parameter: load the parameters from a pickle file
     def interpret(self,dataX,x_index,Plot=True,dataY=None,train_X=None,train_Y=None):
         '''
         Return function between feature of given x_index and target.
-
         input:
             dataX : ndarray, shape: [#feature,]
             x_index : int, index of the feature
@@ -556,49 +542,35 @@ Parameters
 ----------
 max_iter : int, default: 100
     Maximum number of iterations of the optimization algorithm.
-
 batch_size : int, default: None
     Number of rows of each batch of the batch training.
     If set to be None, batch_size would be 1/3 of number of
     instences contained in training data.
-
 units_each_group : int, default: None
     Number of nodes in the first hidden layers after sign layer.
     if set to be None, it will take value of
     int(np.log(#feature)*4.5)
-
 number_of_groups : int, default: None
     Number of nodes in the hidden layers between the second hidden
     layer and output layer. If set to be None, it will take value of
     int(np.log10(#training set)**1.6)
-
 trace : boolean, default: True
     If set to be True, loss will be printed during training
-
 learning_rate : float, default: 0.01
-
 dropout_ratio : float, default: 0.02
-
 Attributes
 ----------
 weights: list of length 5
     weights in the encoding network
-
 biases: list of length 5
     biases in the encoding network
-
 Methods
 -------
 fit: optimize the encoding network
-
 predict: predict the values
-
 plotLoss : trace plot of loss
-
 save_parameter: save the parameters into a pickle file
-
 load_parameter: load the parameters from a pickle file
-
     '''
     def __init__(
             self,max_iter=1500, batch_size=None,
@@ -716,7 +688,6 @@ load_parameter: load the parameters from a pickle file
     def interpret(self,dataX,x_index,dataY=None,Plot=True,train_X=None,train_Y=None):
         '''
         Return function between feature of given x_index and target.
-
         input:
             dataX : ndarray, shape: [#feature,]
             x_index : int, index of the feature
@@ -1209,6 +1180,4 @@ def single_iter_LT(
     b0_ = sess.run(b0)
 
     return (x,y,y_linear,y_proba,rate,sess,Loss,w0_,w_min_,b0_,b_min_)
-
-
 
